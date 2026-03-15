@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CloudGuard Lite</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                CloudGuard <span>Lite</span>
+            </div>
+            <p class="tagline">Paste · Scan · Fix</p>
+        </div>
+        <div class="header-right">
+            ⚡ Rule-Based Scanner · v2.0
+        </div>
+    </header>
+
+    <main>
+        <section class="input-section">
+            <div class="input-header">
+                <label for="configInput">Config Input</label>
+                <div class="format-badges">
+                    <span class="fmt-badge">YAML</span>
+                    <span class="fmt-badge">JSON</span>
+                    <span class="fmt-badge">Terraform</span>
+                </div>
+            </div>
+            <textarea id="configInput" placeholder="Paste your cloud config here..."></textarea>
+            <div class="input-footer">
+                <span class="hint">💡 Supports Terraform, YAML, JSON, Dockerfile configs</span>
+                <div class="btn-group">
+                    <button id="clearBtn">🗑️ Clear</button>
+                    <button id="scanBtn">🔍 Scan Config</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scan overlay -->
+        <div id="scanOverlay" class="scan-overlay hidden">
+            <div class="scan-box">
+                <div class="scan-spinner"></div>
+                <p class="scan-text" id="scanText">Initializing scan...</p>
+                <div class="scan-bar-wrap">
+                    <div class="scan-bar" id="scanBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score + Summary -->
+        <div id="scoreRow" class="score-row hidden">
+            <div class="score-card">
+                <div class="score-circle" id="scoreCircle">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="bg-ring" cx="60" cy="60" r="50" />
+                        <circle class="score-ring" id="scoreRing" cx="60" cy="60" r="50" stroke-dasharray="314"
+                            stroke-dashoffset="314" />
+                    </svg>
+                    <div class="score-text">
+                        <span id="scoreNum">--</span>
+                        <small>/ 100</small>
+                    </div>
+                </div>
+                <div class="score-label" id="scoreLabel">Security Score</div>
+                <div class="score-grade" id="scoreGrade"></div>
+            </div>
+
+            <div class="summary-bar" id="summaryBar">
+                <div class="stat-card critical">
+                    <div class="stat-icon">🔴</div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="countCritical">0</div>
+                        <div class="stat-label">Critical</div>
+                    </div>
+                </div>
+                <div class="stat-card high">
+                    <div class="stat-icon">🟠</div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="countHigh">0</div>
+                        <div class="stat-label">High</div>
+                    </div>
+                </div>
+                <div class="stat-card medium">
+                    <div class="stat-icon">🟡</div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="countMedium">0</div>
+                        <div class="stat-label">Medium</div>
+                    </div>
+                </div>
+                <div class="stat-card low">
+                    <div class="stat-icon">🟢</div>
+                    <div class="stat-info">
+                        <div class="stat-num" id="countLow">0</div>
+                        <div class="stat-label">Low</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <section id="resultsSection" class="hidden">
+            <div class="results-toolbar">
+                <p class="results-header" id="resultsLabel"></p>
+                <button id="exportBtn" class="export-btn">📄 Export PDF</button>
+            </div>
+            <div id="resultsContainer"></div>
+        </section>
+
+        <!-- Scan History -->
+        <section id="historySection" class="history-section hidden">
+            <div class="history-header">
+                <p class="results-header">🕓 Scan History</p>
+                <button id="clearHistoryBtn" class="clear-history-btn">Clear History</button>
+            </div>
+            <div id="historyContainer"></div>
+        </section>
+
+    </main>
+
+    <footer>
+        CloudGuard Lite · Rule-Based Config Scanner
+    </footer>
+
+    <script src="rules.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
