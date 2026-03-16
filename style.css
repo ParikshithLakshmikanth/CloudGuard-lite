@@ -685,3 +685,140 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     background: rgba(15, 37, 64, 0.5);
 }
+
+/* ── Typing Animation ── */
+.hero-section {
+    text-align: center;
+    padding: 2rem 0 0.5rem;
+}
+
+.hero-title {
+    font-size: 1.1rem;
+    color: var(--muted);
+    font-weight: 400;
+    min-height: 1.6rem;
+}
+
+.hero-title .typed {
+    color: var(--teal);
+    font-weight: 600;
+    border-right: 2px solid var(--teal);
+    animation: blink 0.7s step-end infinite;
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+
+/* ── Filter Buttons ── */
+.filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.filter-bar.hidden {
+    display: none;
+}
+
+.filter-label {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 0.25rem;
+}
+
+.filter-btn {
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.3rem 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+}
+
+.filter-btn.all {
+    border: 1.5px solid var(--muted);
+    color: var(--muted);
+}
+
+.filter-btn.critical {
+    border: 1.5px solid var(--critical);
+    color: var(--critical);
+}
+
+.filter-btn.high {
+    border: 1.5px solid var(--high);
+    color: var(--high);
+}
+
+.filter-btn.medium {
+    border: 1.5px solid var(--medium);
+    color: var(--medium);
+}
+
+.filter-btn.low {
+    border: 1.5px solid var(--low);
+    color: var(--low);
+}
+
+.filter-btn.active.all {
+    background: rgba(168, 191, 220, 0.15);
+}
+
+.filter-btn.active.critical {
+    background: rgba(231, 76, 60, 0.15);
+}
+
+.filter-btn.active.high {
+    background: rgba(230, 126, 34, 0.15);
+}
+
+.filter-btn.active.medium {
+    background: rgba(241, 196, 15, 0.15);
+}
+
+.filter-btn.active.low {
+    background: rgba(46, 204, 113, 0.15);
+}
+
+.filter-btn:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+}
+
+/* ── Collapsible Cards ── */
+.card-body {
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 200px;
+    opacity: 1;
+}
+
+.card-body.collapsed {
+    max-height: 0;
+    opacity: 0;
+}
+
+.collapse-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0 0.25rem;
+    transition: transform 0.3s;
+    line-height: 1;
+}
+
+.collapse-btn.collapsed {
+    transform: rotate(-90deg);
+}

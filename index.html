@@ -20,11 +20,18 @@
             <p class="tagline">Paste · Scan · Fix</p>
         </div>
         <div class="header-right">
-            ⚡ Rule-Based Scanner · v2.0
+            ⚡ Rule-Based Scanner · v2.1
         </div>
     </header>
 
     <main>
+
+        <!-- Typing hero -->
+        <div class="hero-section">
+            <p class="hero-title">Scanning for <span class="typed" id="typedText"></span></p>
+        </div>
+
+        <!-- Input -->
         <section class="input-section">
             <div class="input-header">
                 <label for="configInput">Config Input</label>
@@ -69,7 +76,7 @@
                         <small>/ 100</small>
                     </div>
                 </div>
-                <div class="score-label" id="scoreLabel">Security Score</div>
+                <div class="score-label">Security Score</div>
                 <div class="score-grade" id="scoreGrade"></div>
             </div>
 
@@ -105,16 +112,27 @@
             </div>
         </div>
 
-        <!-- Results -->
+        <!-- Filter + Results -->
         <section id="resultsSection" class="hidden">
             <div class="results-toolbar">
                 <p class="results-header" id="resultsLabel"></p>
                 <button id="exportBtn" class="export-btn">📄 Export PDF</button>
             </div>
+
+            <!-- Filter bar -->
+            <div class="filter-bar hidden" id="filterBar">
+                <span class="filter-label">Filter:</span>
+                <button class="filter-btn all active" data-filter="all">All</button>
+                <button class="filter-btn critical" data-filter="critical">🔴 Critical</button>
+                <button class="filter-btn high" data-filter="high">🟠 High</button>
+                <button class="filter-btn medium" data-filter="medium">🟡 Medium</button>
+                <button class="filter-btn low" data-filter="low">🟢 Low</button>
+            </div>
+
             <div id="resultsContainer"></div>
         </section>
 
-        <!-- Scan History -->
+        <!-- History -->
         <section id="historySection" class="history-section hidden">
             <div class="history-header">
                 <p class="results-header">🕓 Scan History</p>
@@ -126,7 +144,7 @@
     </main>
 
     <footer>
-        CloudGuard Lite · Rule-Based Config Scanner
+        CloudGuard Lite · Rule-Based Config Scanner · SSN Coding Club
     </footer>
 
     <script src="rules.js"></script>
