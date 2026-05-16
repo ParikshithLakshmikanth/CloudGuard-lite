@@ -1,154 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CloudGuard Lite</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CloudGuard Lite</title>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-
 <body>
 
-    <header>
-        <div class="header-left">
-            <div class="logo">
-                <span class="logo-icon">🛡️</span>
-                CloudGuard <span>Lite</span>
-            </div>
-            <p class="tagline">Paste · Scan · Fix</p>
+  <header>
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">🛡️</span>
+        CloudGuard <span>Lite</span>
+      </div>
+      <p class="tagline">Paste · Scan · Fix</p>
+    </div>
+    <div class="header-right">⚡ Rule-Based Scanner · v2.2</div>
+  </header>
+
+  <main>
+
+    <!-- Typing hero -->
+    <div class="hero-section">
+      <p class="hero-title">Scanning for <span class="typed" id="typedText"></span></p>
+    </div>
+
+    <!-- Input -->
+    <section class="input-section">
+      <div class="input-header">
+        <label for="configInput">Config Input</label>
+        <div class="format-detector">
+          <span class="detected-badge" id="detectedBadge">Detecting...</span>
+          <div class="format-badges">
+            <span class="fmt-badge">YAML</span>
+            <span class="fmt-badge">JSON</span>
+            <span class="fmt-badge">Terraform</span>
+          </div>
         </div>
-        <div class="header-right">
-            ⚡ Rule-Based Scanner · v2.1
+      </div>
+      <textarea id="configInput" placeholder="Paste your cloud config here..."></textarea>
+      <div class="input-footer">
+        <span class="hint">💡 Format auto-detected as you type</span>
+        <div class="btn-group">
+          <button id="clearBtn">🗑️ Clear</button>
+          <button id="scanBtn">🔍 Scan Config</button>
         </div>
-    </header>
+      </div>
+    </section>
 
-    <main>
-
-        <!-- Typing hero -->
-        <div class="hero-section">
-            <p class="hero-title">Scanning for <span class="typed" id="typedText"></span></p>
+    <!-- Scan overlay -->
+    <div id="scanOverlay" class="scan-overlay hidden">
+      <div class="scan-box">
+        <div class="scan-spinner"></div>
+        <p class="scan-text" id="scanText">Initializing scan...</p>
+        <p class="scan-rule" id="scanRule"></p>
+        <div class="scan-bar-wrap">
+          <div class="scan-bar" id="scanBar"></div>
         </div>
+      </div>
+    </div>
 
-        <!-- Input -->
-        <section class="input-section">
-            <div class="input-header">
-                <label for="configInput">Config Input</label>
-                <div class="format-badges">
-                    <span class="fmt-badge">YAML</span>
-                    <span class="fmt-badge">JSON</span>
-                    <span class="fmt-badge">Terraform</span>
-                </div>
-            </div>
-            <textarea id="configInput" placeholder="Paste your cloud config here..."></textarea>
-            <div class="input-footer">
-                <span class="hint">💡 Supports Terraform, YAML, JSON, Dockerfile configs</span>
-                <div class="btn-group">
-                    <button id="clearBtn">🗑️ Clear</button>
-                    <button id="scanBtn">🔍 Scan Config</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Scan overlay -->
-        <div id="scanOverlay" class="scan-overlay hidden">
-            <div class="scan-box">
-                <div class="scan-spinner"></div>
-                <p class="scan-text" id="scanText">Initializing scan...</p>
-                <div class="scan-bar-wrap">
-                    <div class="scan-bar" id="scanBar"></div>
-                </div>
-            </div>
+    <!-- Score + Summary -->
+    <div id="scoreRow" class="score-row hidden">
+      <div class="score-card">
+        <div class="score-circle">
+          <svg viewBox="0 0 120 120">
+            <circle class="bg-ring" cx="60" cy="60" r="50"/>
+            <circle class="score-ring" id="scoreRing" cx="60" cy="60" r="50"
+              stroke-dasharray="314" stroke-dashoffset="314"/>
+          </svg>
+          <div class="score-text">
+            <span id="scoreNum">--</span>
+            <small>/ 100</small>
+          </div>
         </div>
-
-        <!-- Score + Summary -->
-        <div id="scoreRow" class="score-row hidden">
-            <div class="score-card">
-                <div class="score-circle" id="scoreCircle">
-                    <svg viewBox="0 0 120 120">
-                        <circle class="bg-ring" cx="60" cy="60" r="50" />
-                        <circle class="score-ring" id="scoreRing" cx="60" cy="60" r="50" stroke-dasharray="314"
-                            stroke-dashoffset="314" />
-                    </svg>
-                    <div class="score-text">
-                        <span id="scoreNum">--</span>
-                        <small>/ 100</small>
-                    </div>
-                </div>
-                <div class="score-label">Security Score</div>
-                <div class="score-grade" id="scoreGrade"></div>
-            </div>
-
-            <div class="summary-bar" id="summaryBar">
-                <div class="stat-card critical">
-                    <div class="stat-icon">🔴</div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="countCritical">0</div>
-                        <div class="stat-label">Critical</div>
-                    </div>
-                </div>
-                <div class="stat-card high">
-                    <div class="stat-icon">🟠</div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="countHigh">0</div>
-                        <div class="stat-label">High</div>
-                    </div>
-                </div>
-                <div class="stat-card medium">
-                    <div class="stat-icon">🟡</div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="countMedium">0</div>
-                        <div class="stat-label">Medium</div>
-                    </div>
-                </div>
-                <div class="stat-card low">
-                    <div class="stat-icon">🟢</div>
-                    <div class="stat-info">
-                        <div class="stat-num" id="countLow">0</div>
-                        <div class="stat-label">Low</div>
-                    </div>
-                </div>
-            </div>
+        <div class="score-label">Security Score</div>
+        <div class="score-grade" id="scoreGrade"></div>
+      </div>
+      <div class="summary-bar" id="summaryBar">
+        <div class="stat-card critical">
+          <div class="stat-icon">🔴</div>
+          <div class="stat-info">
+            <div class="stat-num" id="countCritical">0</div>
+            <div class="stat-label">Critical</div>
+          </div>
         </div>
+        <div class="stat-card high">
+          <div class="stat-icon">🟠</div>
+          <div class="stat-info">
+            <div class="stat-num" id="countHigh">0</div>
+            <div class="stat-label">High</div>
+          </div>
+        </div>
+        <div class="stat-card medium">
+          <div class="stat-icon">🟡</div>
+          <div class="stat-info">
+            <div class="stat-num" id="countMedium">0</div>
+            <div class="stat-label">Medium</div>
+          </div>
+        </div>
+        <div class="stat-card low">
+          <div class="stat-icon">🟢</div>
+          <div class="stat-info">
+            <div class="stat-num" id="countLow">0</div>
+            <div class="stat-label">Low</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-        <!-- Filter + Results -->
-        <section id="resultsSection" class="hidden">
-            <div class="results-toolbar">
-                <p class="results-header" id="resultsLabel"></p>
-                <button id="exportBtn" class="export-btn">📄 Export PDF</button>
-            </div>
+    <!-- Heatmap -->
+    <section id="heatmapSection" class="heatmap-section hidden">
+      <p class="heatmap-title">🔥 Risk Heatmap</p>
+      <div class="heatmap-grid" id="heatmapGrid"></div>
+    </section>
 
-            <!-- Filter bar -->
-            <div class="filter-bar hidden" id="filterBar">
-                <span class="filter-label">Filter:</span>
-                <button class="filter-btn all active" data-filter="all">All</button>
-                <button class="filter-btn critical" data-filter="critical">🔴 Critical</button>
-                <button class="filter-btn high" data-filter="high">🟠 High</button>
-                <button class="filter-btn medium" data-filter="medium">🟡 Medium</button>
-                <button class="filter-btn low" data-filter="low">🟢 Low</button>
-            </div>
+    <!-- Filter + Results -->
+    <section id="resultsSection" class="hidden">
+      <div class="results-toolbar">
+        <p class="results-header" id="resultsLabel"></p>
+        <button id="exportBtn" class="export-btn">📄 Export PDF</button>
+      </div>
+      <div class="filter-bar hidden" id="filterBar">
+        <span class="filter-label">Filter:</span>
+        <button class="filter-btn all active" data-filter="all">All</button>
+        <button class="filter-btn critical"   data-filter="critical">🔴 Critical</button>
+        <button class="filter-btn high"       data-filter="high">🟠 High</button>
+        <button class="filter-btn medium"     data-filter="medium">🟡 Medium</button>
+        <button class="filter-btn low"        data-filter="low">🟢 Low</button>
+      </div>
+      <div id="resultsContainer"></div>
+    </section>
 
-            <div id="resultsContainer"></div>
-        </section>
+    <!-- Clean Config -->
+    <section id="cleanSection" class="clean-section hidden">
+      <div class="clean-header">
+        <span class="clean-title">✅ Clean Config Generator</span>
+        <div class="clean-actions">
+          <button class="clean-btn copy" id="copyCleanBtn">📋 Copy</button>
+          <button class="clean-btn download" id="downloadCleanBtn">⬇️ Download</button>
+        </div>
+      </div>
+      <textarea class="clean-textarea" id="cleanOutput" readonly></textarea>
+      <p class="clean-note">
+        <span>Note:</span> Flagged values have been replaced with safe placeholders.
+        Always review before using in production.
+      </p>
+    </section>
 
-        <!-- History -->
-        <section id="historySection" class="history-section hidden">
-            <div class="history-header">
-                <p class="results-header">🕓 Scan History</p>
-                <button id="clearHistoryBtn" class="clear-history-btn">Clear History</button>
-            </div>
-            <div id="historyContainer"></div>
-        </section>
+    <!-- History -->
+    <section id="historySection" class="history-section hidden">
+      <div class="history-header">
+        <p class="results-header">🕓 Scan History</p>
+        <button id="clearHistoryBtn" class="clear-history-btn">Clear History</button>
+      </div>
+      <div id="historyContainer"></div>
+    </section>
 
-    </main>
+  </main>
 
-    <footer>
-        CloudGuard Lite · Rule-Based Config Scanner · SSN Coding Club
-    </footer>
+  <footer>
+    CloudGuard Lite · Rule-Based Config Scanner · SSN Coding Club
+  </footer>
 
-    <script src="rules.js"></script>
-    <script src="app.js"></script>
+  <!-- Toast -->
+  <div class="copied-toast" id="copiedToast">✅ Copied to clipboard!</div>
+
+  <script src="rules.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>
